@@ -1,0 +1,36 @@
+# dependencies:
+@using jpf-symbc
+
+target = Testing.Main
+
+#--- classpaths:
+classpath = ./build/classes/java/main/
+sourcepath = ./src/main/java/
+
+#--- symbolic execution
+search.multiple_errors=true
+listener = gov.nasa.jpf.symbc.testgeneration.SymbolicTestGeneratorListener
+search.depth_limit = 15
+symbolic.optimizechoices = true
+symbolic.dp = z3
+
+#--- reporting settings
+report.file.class = gov.nasa.jpf.report.GenericFilePublisher
+report.publisher=file,console
+report.file.file = ./src/test/java/Testing/MainTest.java
+
+#--- constraints on datatypes
+symbolic.min_int = -100
+symbolic.max_int = 100
+
+#--- what method to check
+symbolic.method = Testing.Main.example(sym#sym),Testing.Main.testMethod(sym),Testing.Main.array(sym#sym)
+
+#--- settings for test generation
+SymbolicTestGeneratorListener.abbreviation = testgen
+testgen.optimize = true
+#JUnit5Formatter is default but can be replaced
+#testgen.formatter = gov.nasa.jpf.symb.testgeneration.JUnit5Formatter
+testgen.formatter.message = simple
+testgen.formatter.package = Testing
+testgen.formatter.class_name = MainTest
